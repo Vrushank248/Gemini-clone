@@ -1,13 +1,13 @@
 
 
 
-const {
+import {
     GoogleGenerativeAI,
     HarmCategory,
     HarmBlockThreshold,
-  } = require("@google/generative-ai");
+  } from "@google/generative-ai";
   
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   const genAI = new GoogleGenerativeAI(apiKey);
   
   const model = genAI.getGenerativeModel({
@@ -22,15 +22,15 @@ const {
     responseMimeType: "text/plain",
   };
   
-  async function run() {
+  async function run(prompt) {
     const chatSession = model.startChat({
       generationConfig,
       history: [
       ],
     });
   
-    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
+    const result = await chatSession.sendMessage(prompt);
     console.log(result.response.text());
   }
   
-  run();
+  export default run;
