@@ -20,15 +20,20 @@ const ContextProvider = (props) => {
         }, 75*index)
     }
 
-    const onSent = async (input) => {
+    const onSent = async(prompt) => {
 
         setResultData("")
         setLoading(true)
         setShowResult(true)
-        setRecentPrompt(input)
-        const response = await run(input)
+        let response
+
+            setPrevPrompts(prev =>[...prev,prompt])
+            response = await run(prompt)
+            setRecentPrompt(prompt)
+
+ 
         let responseArray = response.split("**")
-        let newResponse ;
+        let newResponse = "" ;
 
         /* every even elements of the array will be the string before 
          starting ** and every odd elements of the array will be the string before
