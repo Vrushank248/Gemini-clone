@@ -14,6 +14,11 @@ const ContextProvider = (props) => {
     const [loading, setLoading] = useState(false); // if true, displays loading animation and false while displaying result
     const [resultData, setResultData] = useState(""); // to display the result
 
+    const delayPara = (index, nextWord) => {
+        setTimeout(function(){
+            setResultData(prev => prev+ nextWord)
+        }, 75*index)
+    }
 
     const onSent = async (input) => {
 
@@ -22,7 +27,34 @@ const ContextProvider = (props) => {
         setShowResult(true)
         setRecentPrompt(input)
         const response = await run(input)
-        setResultData(response)
+        let responseArray = response.split("**")
+        let newResponse ;
+
+        /* every even elements of the array will be the string before 
+         starting ** and every odd elements of the array will be the string before
+         the ending ** 
+         that means every odd position strings will be the one which are enclosed
+         in bold tag  */
+        for(let i =0 ; i< responseArray.length ; i++){
+
+            if(i%2 === 0){
+                newResponse += responseArray[i]
+            }else{
+                newResponse += "<b>"+responseArray[i]+"</b>"
+            }
+        }
+
+        // logic for breaking the sentence for new line (finding * symbol)
+        let newResponse2 = newResponse.split("*").join("<br>")
+        
+
+        // below is the logic for typing effect
+        let newResponseArray = newResponse2.split(" ");
+        for(let i = 0 ; i< newResponseArray.length ; i++){
+            let nextWord = newResponseArray[i]
+            delayPara(i, nextWord + " ")
+        }
+
         setLoading(false)
         setInput("")
         
